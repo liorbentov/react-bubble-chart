@@ -69,6 +69,32 @@ export default class ReactBubbleChartD3 {
       .style('border', '3px solid')
       .style('padding', '5px')
       .style('z-index', 500);
+
+    this.defs = this.svg.append("defs");
+
+
+   var filter = this.defs.append("filter")
+    .attr("id", "drop-shadow")
+    .attr("height", "130%");
+
+    filter.append("feGaussianBlur")
+    .attr("in", "SourceAlpha")
+    .attr("stdDeviation", 5)
+    .attr("result", "blur");
+
+
+      filter.append("feOffset")
+    .attr("in", "blur")
+    .attr("dx", 5)
+    .attr("dy", 5)
+          .attr("result", "offsetBlur");
+
+      var feMerge = filter.append("feMerge");
+
+feMerge.append("feMergeNode")
+    .attr("in", "offsetBlur")
+feMerge.append("feMergeNode")
+    .attr("in", "SourceGraphic");
     // create legend and update
     this.adjustSize(el);
     this.update(el, props);
@@ -290,6 +316,7 @@ export default class ReactBubbleChartD3 {
         .transition()
         .duration(duration * 1.2)
         .style('opacity', 1)
+        .style("filter", "url(#drop-shadow)")
         .style('font-size', d => fontFactor ? fontFactor *  d.r + 'px' : null);
     }
 
